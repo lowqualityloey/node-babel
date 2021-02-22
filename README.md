@@ -1,4 +1,4 @@
-# Node Babel Template
+# HOW Bazaar
 
 A node.js and babel template repo.
 
