@@ -1,4 +1,4 @@
-# HOW Bazaar
+# HOW Bazaar - Marketplaces App
 
 A node.js and babel template repo.
 
