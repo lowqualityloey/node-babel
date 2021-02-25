@@ -2,18 +2,19 @@ import { Router } from 'express';
 import Marketplaces from '../models/marketplaceModel';
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const marketplaces = await Marketplaces.find({});
     console.log(marketplaces); // should be an array of object
+    throw new Error();
 
     return res.json(marketplaces);
   } catch (e) {
-    console.error(e);
-    return res.status(500).send(e);
+    next(e);
   }
 });
-router.post('/', async (req, res) => {
+
+router.post('/', async (req, res, next) => {
   try {
     // check the request body exists
     const { body } = req;
@@ -47,14 +48,12 @@ router.post('/', async (req, res) => {
       success: true,
       data: marketplace,
     });
-    // return res.end();
   } catch (e) {
-    console.error(e);
-    return res.status(500).send(e);
+    next(e);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   try {
     const { body } = req;
     const { id } = req.params;
@@ -82,23 +81,20 @@ router.put('/:id', async (req, res) => {
     console.log(marketplace);
     return res.status(200).json({ success: true, data: marketplace });
   } catch (e) {
-    console.error(e);
-
     if (e.kind == 'ObjectID' && e.path == '_id') {
       return res.status(404).json({ error: 'Invalid id parameter' });
     }
-    return res.status(500).send(e);
+    next(e);
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     await Marketplaces.findByIdAndDelete(id);
     return res.status(200).json({ success: true });
   } catch (e) {
-    console.error(e);
-    res.status(500).send(e);
+    next(e);
   }
 });
 
