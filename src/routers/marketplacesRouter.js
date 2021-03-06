@@ -6,7 +6,7 @@ router.get('/', async (req, res, next) => {
   try {
     const marketplaces = await Marketplaces.find({});
     console.log(marketplaces); // should be an array of object
-    throw new Error();
+    //throw new Error();
 
     return res.json(marketplaces);
   } catch (e) {
