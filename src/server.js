@@ -7,8 +7,10 @@ import marketplacesRouter from './routers/marketplacesRouter';
 import errorHandler from './middleware/errorHandler';
 //import Marketplaces from './models/marketplaceModel';
 
+//console.log(process.env.PORT, process.env.SECRET);
+
 connect();
-const PORT = 5001;
+const PORT = parseInt(process.env.PORT) || 5001;
 
 const server = express();
 
