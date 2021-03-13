@@ -63,3 +63,6 @@ typings/
 .next
 
 dist
+
+# ignore keys 
+src/certs/jwtRS256*

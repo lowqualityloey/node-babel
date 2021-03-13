@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Router } from 'express';
 import argon2 from 'argon2';
 //import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +9,16 @@ import registerSchema from '../validation/authRegisterUser';
 import loginSchema from '../validation/authLoginUser';
 
 const router = Router();
+
+const SECRET = process.env.PORT;
+
+const privateCertPath = path.join(__dirname, '../certs/jwtRS256.key');
+
+if (!fs.existsSync(privateCertPath)) {
+  throw new Error('Could not find RS256 Keys');
+}
+
+const privateKey = fs.readFileSync(privateCertPath);
 
 router.post('/register', async (req, res, next) => {
   try {
@@ -84,16 +96,18 @@ router.post('/login', async (req, res, next) => {
     next(e);
   }
 });
+const opts = { algorithm: 'RS256' };
+
 const createToken = (sub, name) => {
-  const SECRET = process.env.PORT;
   const payload = {
     sub: sub,
     name: name,
-    marketPlacesIamAdminOf: [234, 123],
-    isAdmin: true,
+    data: { owner: [], admin: [] },
+    // marketPlacesIamAdminOf: [234, 123],
+    // isAdmin: true,
   };
-  const myToken = jwt.sign(payload, SECRET);
-  return myToken;
+  const jwtToken = jwt.sign(payload, privateKey, opts);
+  return jwtToken;
 };
 
 export default router;
